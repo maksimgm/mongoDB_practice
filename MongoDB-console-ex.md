@@ -67,87 +67,89 @@ Models are fancy constructors from our `Schema` definitions. Instances of these 
 5. Show all the collections inside the library database
 
 		db.getCollectionNames()
+		
+		show collections
 
 
 6. Using the insert method Add an author with the name of "John", age of 37
 
-		db.author.insert({name: "John",
+		db.authors.insert({name: "John",
 		age: "37"
 		});
 
 
 7. Using the insert method Add another author with the name of "Jane", age of 42 and give her a property of books which is an empty array.
 		
-		db.author.insert({name: "Jane",
+		db.authors.insert({name: "Jane",
 		age: "42",
 		books:[]
 		});
 
 8. Use findOne to select an author with an age greater than or equal to 42. Change that authors age to 33, then use the save method to persist the change.
 
-		db.author.findOne({
-		age:{$gte: "42"},{
-		age:"33"
-		}});
+		var jane = db.authors.findOne({age:			{$gte:"42"}})
+		jane.age = 33
+		db.authors.save(jane)
 
 
 9. Find all of the authors
 
-		db.author.find()
+		db.authors.find()
 
 
 10. Find an author with the name of John
 
-		db.author.find({
+		db.authors.find({
 		name: "John"
 		})
 
 11. Find all of the authors but limit the search to one
 
-		db.author.find().limit(1)
+		db.authors.find().limit(1)
 
 12. Find an author whose name is not equal to "John" using the $ne operator
 
-		db.author.find({
+		db.authors.find({
 		name: {$ne: "John"}
 		})
 
 13. Update an author who has a name of "John" and change his name to "James" (without using the set method)
 
-		db.author.update({name:"John"},		
+		db.authors.update({name:"John"},		
 		{name:"James"},{upsert:true})
 
 14. Update an author named "James" and using the set operator, set his name back to John and age to 37.
 
-		db.author.update({name:"James"},{$set:			{name:"Jack"",age:"37"}})
+		db.authors.update({name:"James"},{$set			{name:"Jack"",age:"37"}})
 	
 15. Delete an author whose name is "John"
 	
-		db.author.remove({name:"John"})
+		db.authors.remove({name:"John"})
 
 16. Delete all of the authors
 
-		db.author.delete()
+		db.authors.remove()
 
 17. Create an author whose name is "John" and has an empty array of books
 	
-		db.author.insert({
+		db.authors.insert({
 		name:"John",
 		books:[]
 		});
 
 18. Update John and Using the $push operator add the string "Of Mice and Men" into the books array.
 
-		 db.author.update({name:"John"},{$push:		{books:"Of Mice and Men"}});
+		 db.authors.update({name:"John"},{$push:	     {books:"Of Mice and Men"}});
 
 19. Update John and using the $push and $each operators add the strings "Grapes of Wrath", "The Pearl", "East of Eden", "50 Shades of Gray" into the books array.
 
-		db.author.update({name:"John"},{$push:{books:		{$each:["The Pearl", "East of Eden", "50 		Shades of Gray"]}}})
+		db.authors.update({name:"John"},{$push:		{books:	{$each:["The Pearl", "East of Eden", 		"50 Shades of Gray"]}}})
 
 20. Sorry - John Steinbeck didn't write 50 Shades of Gray, using the $pull operator, remove that book from the array.
 
-		db.author.update({name:"John"},{$pull:			{books:"50 	Shades of Gray"}})
+		db.authors.update({name:"John"},{$pull:		{books:"50 	Shades of Gray"}})
 	
 21. Finally, using the $in operator, update an author who has a book "Of Mice and Men" or "The Pearl" in the books array and change their name to "John Steinbeck"
 
-		db.author.update({$in:["Of Mice and Men", 		"The Pearl"]},{name:"John Steinbeck"},			{upsert:true})
+	
+		db.authors.update({books:{$in:["Of Mice and 		Men", "The Pearl"]},{$set:{name:"John 			Steinbeck"}})
